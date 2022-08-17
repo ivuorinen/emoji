@@ -1,0 +1,20 @@
+*               text=auto
+*.md            text diff=markdown
+*.php           text diff=php
+
+.gitattributes  export-ignore
+.gitignore      export-ignore
+
+# Graphics
+*.gif             binary
+*.gifv            binary
+*.jpg             binary
+*.jpeg            binary
+*.png             binary
+# SVG treated as an asset (binary) by default.
+*.svg             text
+*.svgz            binary
+*.tif             binary
+*.tiff            binary
+*.wbmp            binary
+*.webp            binary

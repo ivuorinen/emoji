@@ -35,30 +35,34 @@ foreach ( $files as $file ) {
 
 $contents = "# Emotes\n\n";
 
+$contents .= sprintf(
+    "Listing of %d emojis last refreshed: %s",
+    count($files),
+    date('c')
+) . "\n\n";
+
+$contents .= "<!-- markdownlint-disable-file MD033 -->\n";
+
 foreach ( $listing as $header => $icons ) {
-    $contents .= sprintf( "## %s\n\n", $header );
+    $contents .= sprintf( "\n## %s\n\n", $header );
 
     $chunks = array_chunk( $icons, $per_row );
 
-    $contents .= '<table style="text-align: center;width: 100%">' . "\n";
+    $contents .= '<div style="text-align: center;display:grid;grid-template-columns: repeat(5, 1fr);grid-template-rows: minmax(70px, auto);">' . "\n";
 
     foreach ( $chunks as $chunk_icons ) {
-        $contents .= "<tr>\n";
-
         foreach ( $chunk_icons as $icon ) {
             $file = $icon;
             [ $name, $ext ] = explode( '.', get_basename($icon), 2 );
 
-            $format   = '<td style=\'width: %s\'><img width=\'30\' src="%2$s" alt="%2$s"><br><kbd>:%3$s:</kbd></td>';
-            $contents .= sprintf( $format, $per_row_width, $file, $name ) . "\n";
+            $format   = '<div style=\'border:1px solid #eee;padding:.5rem\'>'
+                . '<img width=\'30\' src="%1$s" alt="%1$s"><br>'
+                . '<kbd style=\'display:inline-block;max-width: 15vw;white-space: nowrap;overflow:auto\'>%2$s</kbd></div>';
+            $contents .= sprintf( $format, $file, $name ) . "\n";
         }
-
-        $contents .= "</tr>\n";
     }
 
-    $contents .= "</table>\n\n";
+    $contents .= "</div>\n";
 }
-
-$contents .= "\n\n Generated: " . date('c');
 
 file_put_contents( $output, $contents );
