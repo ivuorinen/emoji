@@ -1,0 +1,12 @@
+[project]
+name = "emoji-dedup"
+version = "0.1.0"
+description = "Find and remove duplicate emoji files using perceptual hashing"
+requires-python = ">=3.11"
+dependencies = [
+    "imagehash>=4.3",
+    "Pillow>=10.0",
+]
+
+[project.scripts]
+dedup = "dedup:main"
