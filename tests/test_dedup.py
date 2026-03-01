@@ -1,11 +1,10 @@
 """Tests for dedup.py."""
 
-from pathlib import Path
+import hashlib
 from unittest.mock import patch
 
 import imagehash
 import numpy as np
-import pytest
 from PIL import Image
 
 import dedup
@@ -73,10 +72,6 @@ def _make_hash(val: int) -> imagehash.ImageHash:
     return imagehash.ImageHash(bits)
 
 
-def _zero_hash() -> imagehash.ImageHash:
-    return imagehash.ImageHash(np.zeros((8, 8), dtype=bool))
-
-
 def _make_info(
     phash=0,
     ahash=0,
@@ -142,7 +137,7 @@ class TestImageInfoIsCandidate:
     def test_exact_match_static(self):
         a = _make_info()
         b = _make_info()
-        is_match, agreements, total_dist = a.is_candidate(b, threshold=0)
+        is_match, _agreements, total_dist = a.is_candidate(b, threshold=0)
         assert is_match is True
         assert total_dist == 0
 
@@ -156,14 +151,14 @@ class TestImageInfoIsCandidate:
     def test_animated_needs_all_four_agreements(self):
         a = _make_info(n_frames=5)
         b = _make_info(n_frames=5)
-        is_match, agreements, _ = a.is_candidate(b, threshold=0)
+        is_match, _agreements, _ = a.is_candidate(b, threshold=0)
         assert is_match is True
-        assert agreements == 4
+        assert _agreements == 4
 
     def test_animated_rejects_partial_agreement(self):
         a = _make_info(phash=0, ahash=0, dhash=0, colorhash=0, n_frames=5)
         b = _make_info(phash=30, ahash=30, dhash=30, colorhash=0, n_frames=5)
-        is_match, agreements, _ = a.is_candidate(b, threshold=0)
+        is_match, _agreements, _ = a.is_candidate(b, threshold=0)
         # Only colorhash agrees -> 1/4 -> rejected
         assert is_match is False
 
@@ -188,16 +183,12 @@ class TestComputeMd5:
     def test_correct_digest(self, tmp_path):
         f = tmp_path / "test.bin"
         f.write_bytes(b"hello world")
-        import hashlib
-
         expected = hashlib.md5(b"hello world").hexdigest()
         assert _compute_md5(f) == expected
 
     def test_empty_file(self, tmp_path):
         f = tmp_path / "empty.bin"
         f.write_bytes(b"")
-        import hashlib
-
         expected = hashlib.md5(b"").hexdigest()
         assert _compute_md5(f) == expected
 
