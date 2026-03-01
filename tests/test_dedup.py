@@ -1,6 +1,5 @@
 """Tests for dedup.py."""
 
-import hashlib
 from unittest.mock import patch
 
 import imagehash
@@ -212,15 +211,13 @@ class TestComputeMd5:
         """Verify MD5 digest matches expected value for known content."""
         f = tmp_path / "test.bin"
         f.write_bytes(b"hello world")
-        expected = hashlib.md5(b"hello world").hexdigest()
-        assert _compute_md5(f) == expected
+        assert _compute_md5(f) == "5eb63bbbe01eeed093cb22bb8f5acdc3"
 
     def test_empty_file(self, tmp_path):
         """Verify MD5 digest is correct for an empty file."""
         f = tmp_path / "empty.bin"
         f.write_bytes(b"")
-        expected = hashlib.md5(b"").hexdigest()
-        assert _compute_md5(f) == expected
+        assert _compute_md5(f) == "d41d8cd98f00b204e9800998ecf8427e"
 
 
 class TestFilesSizeSimilar:

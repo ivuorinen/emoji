@@ -35,6 +35,10 @@ def make_gif():
         durations: list[int],
         size: tuple[int, int] = (4, 4),
     ) -> Path:
+        if not colors:
+            raise ValueError("colors must not be empty")
+        if len(durations) != len(colors):
+            raise ValueError(f"durations length ({len(durations)}) must match colors length ({len(colors)})")
         frames = [Image.new("RGBA", size, c) for c in colors]
         path = directory / name
         frames[0].save(
