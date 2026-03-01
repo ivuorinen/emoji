@@ -8,5 +8,8 @@ dependencies = [
     "Pillow>=10.0",
 ]
 
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
 [project.scripts]
 dedup = "dedup:main"
