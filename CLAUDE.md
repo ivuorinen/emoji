@@ -13,16 +13,16 @@ Personal emoji/emote collection for chat apps (Slack, Discord, etc.). Contains 3
 uv sync
 
 # Regenerate README.md and index.html from emoji/ contents
-python3 create_listing.py
+uv run python3 create_listing.py
 
 # Find duplicate emojis (dry run)
-python3 dedup.py --dry-run
+uv run python3 dedup.py --dry-run
 
 # Find duplicates with custom threshold (0=exact match, default)
-python3 dedup.py --threshold 5 --dry-run
+uv run python3 dedup.py --threshold 5 --dry-run
 
 # Actually remove duplicates
-python3 dedup.py --dir emoji/
+uv run python3 dedup.py --dir emoji/
 
 # Or via uv entry point
 uv run dedup --dry-run

@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "file=\"$CLAUDE_FILE\"; if [[ \"$file\" == *README.md || \"$file\" == *index.html ]]; then echo 'BLOCKED: README.md and index.html are generated artifacts. Edit create_listing.py instead, then run /regen-listings.' >&2; exit 2; fi"
+            "command": "file=$(jq -r '.tool_input.file_path // empty'); if [[ \"$file\" == *README.md || \"$file\" == *index.html ]]; then echo 'BLOCKED: README.md and index.html are generated artifacts. Edit create_listing.py instead, then run /regen-listings.' >&2; exit 2; fi"
           }
         ]
       },
@@ -15,7 +15,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "file=\"$CLAUDE_FILE\"; if [[ \"$file\" == */uv.lock || \"$file\" == uv.lock ]]; then echo 'BLOCKED: uv.lock is auto-generated. Modify pyproject.toml and run uv sync instead.' >&2; exit 2; fi"
+            "command": "file=$(jq -r '.tool_input.file_path // empty'); if [[ \"$file\" == */uv.lock || \"$file\" == uv.lock ]]; then echo 'BLOCKED: uv.lock is auto-generated. Modify pyproject.toml and run uv sync instead.' >&2; exit 2; fi"
           }
         ]
       },
@@ -24,7 +24,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "file=\"$CLAUDE_FILE\"; if [[ \"$file\" == *.github/workflows/*.yml || \"$file\" == .github/workflows/*.yml ]]; then echo 'BLOCKED: CI workflows use pinned action SHAs with # version comments for security. Edit workflow files carefully and maintain the SHA-pinning convention.' >&2; exit 2; fi"
+            "command": "file=$(jq -r '.tool_input.file_path // empty'); if [[ \"$file\" == *.github/workflows/*.yml || \"$file\" == .github/workflows/*.yml ]]; then echo 'BLOCKED: CI workflows use pinned action SHAs with # version comments for security. Edit workflow files carefully and maintain the SHA-pinning convention.' >&2; exit 2; fi"
           }
         ]
       },
@@ -33,7 +33,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "file=\"$CLAUDE_FILE\"; if [[ \"$file\" == */renovate.json || \"$file\" == renovate.json ]]; then echo 'BLOCKED: renovate.json is rarely edited. Make changes deliberately and confirm with the user first.' >&2; exit 2; fi"
+            "command": "file=$(jq -r '.tool_input.file_path // empty'); if [[ \"$file\" == */renovate.json || \"$file\" == renovate.json ]]; then echo 'BLOCKED: renovate.json is rarely edited. Make changes deliberately and confirm with the user first.' >&2; exit 2; fi"
           }
         ]
       },
@@ -42,7 +42,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "file=\"$CLAUDE_FILE\"; if [[ \"$file\" == emoji/* || \"$file\" == */emoji/* ]]; then echo 'BLOCKED: Emoji image files should not be written by Claude. Manage images manually or use /dedup-check.' >&2; exit 2; fi"
+            "command": "file=$(jq -r '.tool_input.file_path // empty'); if [[ \"$file\" == emoji/* || \"$file\" == */emoji/* ]]; then echo 'BLOCKED: Emoji image files should not be written by Claude. Manage images manually or use /dedup-check.' >&2; exit 2; fi"
           }
         ]
       }
@@ -53,7 +53,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "file=\"$CLAUDE_FILE\"; if [[ \"$file\" == *.py ]]; then uv run ruff check --fix \"$file\" 2>&1 | tail -5 && uv run ruff format \"$file\" 2>&1 | tail -3; fi"
+            "command": "file=$(jq -r '.tool_input.file_path // empty'); if [[ \"$file\" == *.py ]]; then uv run ruff check --fix \"$file\" 2>&1 | tail -5 && uv run ruff format \"$file\" 2>&1 | tail -3; fi"
           }
         ]
       },
@@ -62,7 +62,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "file=\"$CLAUDE_FILE\"; if [[ \"$file\" == *.py ]]; then uv run pytest --tb=short -q 2>&1 | tail -5; fi"
+            "command": "file=$(jq -r '.tool_input.file_path // empty'); if [[ \"$file\" == *.py ]]; then uv run pytest --tb=short -q 2>&1 | tail -5; fi"
           }
         ]
       }
