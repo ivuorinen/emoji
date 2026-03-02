@@ -225,9 +225,7 @@ def _files_size_similar(path1: Path, path2: Path) -> bool:
     return ratio <= MAX_SIZE_DIFF_RATIO
 
 
-def _verify_duplicate_pair(
-    path_i: Path, info_i: ImageInfo, path_j: Path, info_j: ImageInfo, threshold: int
-) -> bool:
+def _verify_duplicate_pair(path_i: Path, info_i: ImageInfo, path_j: Path, info_j: ImageInfo, threshold: int) -> bool:
     """
     Verify if two candidate images are true duplicates.
     For animated GIFs, compares frames and timing. For static images, perceptual match is sufficient.
@@ -241,9 +239,7 @@ def _verify_duplicate_pair(
     return True
 
 
-def find_similar_groups(
-    files: list[Path], threshold: int
-) -> list[list[tuple[Path, ImageInfo]]]:
+def find_similar_groups(files: list[Path], threshold: int) -> list[list[tuple[Path, ImageInfo]]]:
     """Find groups of similar images using multi-hash consensus and union-find."""
     # Compute image info for all files
     images: list[tuple[Path, ImageInfo]] = []
@@ -292,9 +288,7 @@ def find_similar_groups(
     return [group for group in clusters.values() if len(group) > 1]
 
 
-def deduplicate(
-    groups: list[list[tuple[Path, ImageInfo]]], dry_run: bool, threshold: int
-) -> tuple[int, int]:
+def deduplicate(groups: list[list[tuple[Path, ImageInfo]]], dry_run: bool, threshold: int) -> tuple[int, int]:
     """Remove duplicates, keeping first alphabetically. Returns (groups, removed)."""
     total_removed = 0
 
@@ -306,7 +300,6 @@ def deduplicate(
 
         # Calculate agreement info for display
         agreements_info = [keep_info.is_candidate(info, threshold) for _, info in remove]
-        min_agreements = min(a for _, a, _ in agreements_info)
 
         frames_str = f", {keep_info.n_frames} frames" if keep_info.is_animated() else ""
         print(f"\nSimilar group ({len(group)} files, {keep_info.width}x{keep_info.height}{frames_str}):")
@@ -325,9 +318,7 @@ def deduplicate(
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Find and remove duplicate emoji files using perceptual hashing."
-    )
+    parser = argparse.ArgumentParser(description="Find and remove duplicate emoji files using perceptual hashing.")
     parser.add_argument(
         "--threshold",
         type=int,
@@ -370,7 +361,7 @@ def main():
 
     group_count, removed = deduplicate(groups, args.dry_run, args.threshold)
 
-    print(f"\n--- Summary ---")
+    print("\n--- Summary ---")
     print(f"Files scanned: {len(files)}")
     print(f"Similar groups: {group_count}")
     if args.dry_run:

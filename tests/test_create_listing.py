@@ -133,7 +133,7 @@ class TestGenerateReadme:
         f = make_png(tmp_path, "smile.png")
         create_listing.generate_readme([f])
         content = (tmp_path / "README.md").read_text()
-        assert ':smile:' in content
+        assert ":smile:" in content
 
 
 class TestGenerateHtml:

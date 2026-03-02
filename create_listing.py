@@ -31,7 +31,7 @@ def generate_readme(files: list[Path]) -> None:
         contents += '<table style="text-align: center;width: 100%">\n'
 
         for i in range(0, len(icons), PER_ROW):
-            chunk = icons[i:i + PER_ROW]
+            chunk = icons[i : i + PER_ROW]
             contents += "<tr>\n"
 
             for icon in chunk:
@@ -42,7 +42,7 @@ def generate_readme(files: list[Path]) -> None:
                 contents += (
                     f"<td style='width: {per_row_width}'>"
                     f"<img width='30' src=\"{encoded_path}\" "
-                    f"alt=\"{display_path}\" title=\":{name}:\"></td>\n"
+                    f'alt="{display_path}" title=":{name}:"></td>\n'
                 )
 
             contents += "</tr>\n"
@@ -80,12 +80,12 @@ def generate_html(files: list[Path]) -> None:
             )
         sections.append(
             f'    <section data-group="{html.escape(header)}">\n'
-            f'      <h2>{display_header}</h2>\n'
+            f"      <h2>{display_header}</h2>\n"
             f'      <div class="grid">\n{chr(10).join(emoji_items)}\n      </div>\n'
-            f'    </section>'
+            f"    </section>"
         )
 
-    contents = f'''<!DOCTYPE html>
+    contents = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -208,17 +208,14 @@ def generate_html(files: list[Path]) -> None:
   </script>
 </body>
 </html>
-'''
+"""
 
     Path("index.html").write_text(contents, encoding="utf-8")
     print(f"Generated index.html with {len(files)} emojis")
 
 
 def main():
-    files = sorted(
-        f for f in EMOJI_DIR.iterdir()
-        if f.suffix.lower() in EXTENSIONS
-    )
+    files = sorted(f for f in EMOJI_DIR.iterdir() if f.suffix.lower() in EXTENSIONS)
 
     if not files:
         raise SystemExit("No images to continue with.")
